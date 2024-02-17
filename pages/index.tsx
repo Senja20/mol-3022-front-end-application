@@ -1,9 +1,10 @@
-import { SetStateAction, useState, useCallback } from "react";
+import { SetStateAction, useState, useCallback, useEffect } from "react";
 import { Inter } from "next/font/google";
 import ButtonComponent from "@/components/Button";
 import TextArea from "@/components/TextArea";
 import { Fasta, FastaParser } from "@/Fasta";
 import { Fastq, FastqParser } from "@/Fastq";
+import { DataPointState } from "@/types/DataPointState";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -14,7 +15,9 @@ export default function Home() {
   const [selectedFormat, setSelectedFormat] = useState<string>(
     availableFormats[0]
   );
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false); // track the loading state
+
+  const [dataPointStates, setDataPointStates] = useState<DataPointState[]>([]);
 
   const handleInputChange = useCallback(
     (event: { target: { value: SetStateAction<string> } }) => {
@@ -35,23 +38,83 @@ export default function Home() {
 
     const data =
       selectedFormat === "Fasta"
-        ? FastaParser.parse(inputText)
-        : FastqParser.parse(inputText);
+        ? FastaParser.parseMultiple(inputText)
+        : FastqParser.parseMultiple(inputText);
 
-    fetch("/api/submit", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ data }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        setLoading(false);
+    const updatedDataPointStates = data.map(
+      (d: Fasta | Fastq, index: number) => {
+        return {
+          id: index + "",
+          data: d,
+          requestFinished: false,
+          completeResponseString: "",
+        };
+      }
+    );
+
+    console.log(updatedDataPointStates);
+
+    setDataPointStates(updatedDataPointStates);
+
+    const promises = updatedDataPointStates.map((d: DataPointState) =>
+      sendDataRequest(d)
+    );
+
+    // how to check if all promises are resolved
+    Promise.all(promises)
+      .then(() => {
+        console.log("All requests are resolved");
+        console.log(dataPointStates);
       })
-      .catch((error) => console.error("Error:", error));
+      .catch((error) => {
+        console.error("Error:", error);
+      })
+      .finally(() => {
+        setInputText("");
+        setLoading(false);
+      });
   }, [inputText]);
+
+  const sendDataRequest = (dataBody: DataPointState) => {
+    return new Promise((resolve, reject) => {
+      fetch("/api/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ data: dataBody }),
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          // find the dataPointState that matches the id
+          const updatedDataPointStates = dataPointStates.map((d) =>
+            d.id === dataBody.id
+              ? {
+                  ...d,
+                  requestFinished: true,
+                  completeResponseString: JSON.stringify(data),
+                  prediction: data.prediction,
+                }
+              : d
+          );
+
+          if (updatedDataPointStates) {
+            setDataPointStates(updatedDataPointStates);
+          }
+
+          resolve(data);
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          reject(error);
+        });
+    });
+  };
 
   const handleCancel = useCallback(() => {
     console.log("Cancelled");

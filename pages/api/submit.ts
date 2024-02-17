@@ -3,16 +3,24 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 type Data = {
   prediction: boolean;
+  id: string;
 };
 
-export default function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<Data>
-) {
-  console.log("Request body:", req.body);
+const randomInt = (min: number, max: number) =>
+  Math.floor(Math.random() * (max - min + 1)) + min;
+
+export default (req: NextApiRequest, res: NextApiResponse<Data>) => {
+  if (req.method !== "POST") {
+    res.status(405);
+    return;
+  }
+
+  console.log("Request body", req.body.data);
 
   // wait for 2 seconds to simulate a long running process
   setTimeout(() => {
-    res.status(200).json({ prediction: true });
-  }, 2000);
-}
+    res
+      .status(200)
+      .json({ prediction: !!randomInt(0, 10), id: req.body.data.id });
+  }, randomInt(2000, 5000));
+};
