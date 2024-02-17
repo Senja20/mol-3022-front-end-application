@@ -2,6 +2,7 @@ import { SetStateAction, useState, useCallback } from "react";
 import { Inter } from "next/font/google";
 import ButtonComponent from "@/components/Button";
 import TextArea from "@/components/TextArea";
+import { Fasta, FastaParser } from "@/Fasta";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,7 +17,9 @@ export default function Home() {
   );
 
   const handleSubmit = useCallback(() => {
-    console.log("Input text:", inputText);
+    const data = FastaParser.parseMultiple(inputText);
+
+    console.log("Input text:", data);
     // todo: send inputText to server
   }, [inputText]);
 
