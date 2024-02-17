@@ -15,6 +15,7 @@ const TextArea = ({
       placeholder={`Enter your protein string in ${format} format...`}
       value={value}
       onChange={onChange}
+      onInput={onChange}
     ></textarea>
   );
 };

@@ -5,6 +5,7 @@ import TextArea from "@/components/TextArea";
 import { Fasta, FastaParser } from "@/Fasta";
 import { Fastq, FastqParser } from "@/Fastq";
 import { DataPointState } from "@/types/DataPointState";
+import { ResponseFormat } from "@/types/DataResponse";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,7 +21,7 @@ export default function Home() {
   const [dataPointStates, setDataPointStates] = useState<DataPointState[]>([]);
 
   const handleInputChange = useCallback(
-    (event: { target: { value: SetStateAction<string> } }) => {
+    (event: React.ChangeEvent<HTMLTextAreaElement>) => {
       setInputText(event.target.value);
     },
     []
@@ -41,7 +42,7 @@ export default function Home() {
         ? FastaParser.parseMultiple(inputText)
         : FastqParser.parseMultiple(inputText);
 
-    const updatedDataPointStates = data.map(
+    const initialDataPointStates = data.map(
       (d: Fasta | Fastq, index: number) => {
         return {
           id: index + "",
@@ -52,25 +53,52 @@ export default function Home() {
       }
     );
 
-    console.log(updatedDataPointStates);
+    if (initialDataPointStates.length === 0) {
+      setLoading(false);
+      return;
+    }
+    setDataPointStates(initialDataPointStates);
 
-    setDataPointStates(updatedDataPointStates);
-
-    const promises = updatedDataPointStates.map((d: DataPointState) =>
+    const promises = initialDataPointStates.map((d: DataPointState) =>
       sendDataRequest(d)
     );
 
-    // how to check if all promises are resolved
+    console.log("initialDataPointStates", initialDataPointStates);
+
     Promise.all(promises)
-      .then(() => {
+      .then((body) => {
         console.log("All requests are resolved");
-        console.log(dataPointStates);
+
+        // verify that data is of type ResponseFormat[]
+        if (!Array.isArray(body)) {
+          throw new Error("Data is not an array");
+        }
+
+        const data = body as ResponseFormat[];
+
+        setDataPointStates((prevState) => {
+          const updatedDataPointStates = prevState.map((d, index) => {
+            const response = data.find((r) => r.id === d.id);
+            if (!response) {
+              return d;
+            }
+
+            return {
+              ...d,
+              requestFinished: true,
+              prediction: response.prediction,
+              completeResponseString: JSON.stringify(response),
+            };
+          });
+
+          return updatedDataPointStates;
+        });
       })
       .catch((error) => {
         console.error("Error:", error);
       })
       .finally(() => {
-        setInputText("");
+        //setInputText("");
         setLoading(false);
       });
   }, [inputText]);
@@ -91,22 +119,6 @@ export default function Home() {
           return response.json();
         })
         .then((data) => {
-          // find the dataPointState that matches the id
-          const updatedDataPointStates = dataPointStates.map((d) =>
-            d.id === dataBody.id
-              ? {
-                  ...d,
-                  requestFinished: true,
-                  completeResponseString: JSON.stringify(data),
-                  prediction: data.prediction,
-                }
-              : d
-          );
-
-          if (updatedDataPointStates) {
-            setDataPointStates(updatedDataPointStates);
-          }
-
           resolve(data);
         })
         .catch((error) => {
@@ -118,7 +130,6 @@ export default function Home() {
 
   const handleCancel = useCallback(() => {
     console.log("Cancelled");
-    setInputText("");
   }, []);
 
   return (
@@ -163,6 +174,22 @@ export default function Home() {
             />
           </div>
         </div>
+      </div>
+      <div className="w-full">
+        {dataPointStates.map((dataPointState) => (
+          <div
+            key={dataPointState.id}
+            className="bg-blue-200 h-8 mt-2"
+            style={{
+              width: "100%",
+              backgroundColor: dataPointState.requestFinished
+                ? "green"
+                : "yellow",
+            }} // Set the width to 100%
+          >
+            {/* You can add content inside the rectangular element if needed */}
+          </div>
+        ))}
       </div>
     </main>
   );

@@ -15,9 +15,6 @@ export default (req: NextApiRequest, res: NextApiResponse<Data>) => {
     return;
   }
 
-  console.log("Request body", req.body.data);
-
-  // wait for 2 seconds to simulate a long running process
   setTimeout(() => {
     res
       .status(200)
