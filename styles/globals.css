@@ -31,3 +31,44 @@ body {
     text-wrap: balance;
   }
 }
+.w-full {
+  color: black;
+}
+
+.data-point {
+  border: 1px solid black;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.finished {
+  background-color: white;
+}
+
+.pending {
+  background-color: black;
+  color: white;
+}
+
+.loading-spinner {
+  /* flex is pain
+   https://css-tricks.com/snippets/css/a-guide-to-flexbox/
+  */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.spinner-icon {
+  /** based on: https://www.w3schools.com/css/css3_animations.asp */
+  animation: spin 1s linear infinite; /* this add the spinning animation*/
+}
+
+@keyframes spin {
+  /* this took too much time  
+    * based on: https://developer.mozilla.org/en-US/docs/Web/CSS/@keyframes
+  */
+  100% {
+    transform: rotate(360deg); /* define the spinning animation*/
+  }
+}

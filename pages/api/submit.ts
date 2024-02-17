@@ -18,6 +18,6 @@ export default (req: NextApiRequest, res: NextApiResponse<Data>) => {
   setTimeout(() => {
     res
       .status(200)
-      .json({ prediction: !!randomInt(0, 10), id: req.body.data.id });
+      .json({ prediction: !!randomInt(0, 1), id: req.body.data.id });
   }, randomInt(2000, 5000));
 };

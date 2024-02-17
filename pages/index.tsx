@@ -6,6 +6,7 @@ import { Fasta, FastaParser } from "@/Fasta";
 import { Fastq, FastqParser } from "@/Fastq";
 import { DataPointState } from "@/types/DataPointState";
 import { ResponseFormat } from "@/types/DataResponse";
+import VisualizeResult from "@/components/VisualizeResult";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -59,73 +60,48 @@ export default function Home() {
     }
     setDataPointStates(initialDataPointStates);
 
-    const promises = initialDataPointStates.map((d: DataPointState) =>
-      sendDataRequest(d)
-    );
+    const promises = initialDataPointStates.map((d: DataPointState) => {
+      return sendDataRequest(d);
+    });
 
-    console.log("initialDataPointStates", initialDataPointStates);
+    Promise.all(promises).then(() => {
+      setLoading(false);
+    });
+  }, [inputText]);
 
-    Promise.all(promises)
-      .then((body) => {
-        console.log("All requests are resolved");
-
-        // verify that data is of type ResponseFormat[]
-        if (!Array.isArray(body)) {
-          throw new Error("Data is not an array");
+  const sendDataRequest = (dataBody: DataPointState) => {
+    return fetch("/api/submit", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ data: dataBody }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
         }
-
-        const data = body as ResponseFormat[];
-
+        return response.json();
+      })
+      .then((data: ResponseFormat) => {
         setDataPointStates((prevState) => {
-          const updatedDataPointStates = prevState.map((d, index) => {
-            const response = data.find((r) => r.id === d.id);
-            if (!response) {
+          return prevState.map((d) => {
+            if (d.id !== dataBody.id) {
               return d;
             }
 
             return {
               ...d,
               requestFinished: true,
-              prediction: response.prediction,
-              completeResponseString: JSON.stringify(response),
+              prediction: data.prediction,
+              completeResponseString: JSON.stringify(data),
             };
           });
-
-          return updatedDataPointStates;
         });
       })
       .catch((error) => {
         console.error("Error:", error);
-      })
-      .finally(() => {
-        //setInputText("");
-        setLoading(false);
       });
-  }, [inputText]);
-
-  const sendDataRequest = (dataBody: DataPointState) => {
-    return new Promise((resolve, reject) => {
-      fetch("/api/submit", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ data: dataBody }),
-      })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Network response was not ok");
-          }
-          return response.json();
-        })
-        .then((data) => {
-          resolve(data);
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-          reject(error);
-        });
-    });
   };
 
   const handleCancel = useCallback(() => {
@@ -175,22 +151,7 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <div className="w-full">
-        {dataPointStates.map((dataPointState) => (
-          <div
-            key={dataPointState.id}
-            className="bg-blue-200 h-8 mt-2"
-            style={{
-              width: "100%",
-              backgroundColor: dataPointState.requestFinished
-                ? "green"
-                : "yellow",
-            }} // Set the width to 100%
-          >
-            {/* You can add content inside the rectangular element if needed */}
-          </div>
-        ))}
-      </div>
+      <VisualizeResult dataPointStates={dataPointStates} />
     </main>
   );
 }
