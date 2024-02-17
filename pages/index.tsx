@@ -2,11 +2,12 @@ import { SetStateAction, useState, useCallback, useEffect } from "react";
 import { Inter } from "next/font/google";
 import ButtonComponent from "@/components/Button";
 import TextArea from "@/components/TextArea";
-import { Fasta, FastaParser } from "@/Fasta";
-import { Fastq, FastqParser } from "@/Fastq";
+import { Fasta, FastaParser } from "@/Classes/Fasta";
+import { Fastq, FastqParser } from "@/Classes/Fastq";
 import { DataPointState } from "@/types/DataPointState";
 import { ResponseFormat } from "@/types/DataResponse";
-import VisualizeResult from "@/components/VisualizeResult";
+import VisualizeResultTable from "@/components/VisualizeResult";
+import { abort } from "process";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,6 +22,8 @@ export default function Home() {
 
   const [dataPointStates, setDataPointStates] = useState<DataPointState[]>([]);
 
+  const abortController = new AbortController();
+
   const handleInputChange = useCallback(
     (event: React.ChangeEvent<HTMLTextAreaElement>) => {
       setInputText(event.target.value);
@@ -34,6 +37,11 @@ export default function Home() {
     },
     [selectedFormat]
   );
+
+  const handleReset = useCallback(() => {
+    setInputText("");
+    setDataPointStates([]);
+  }, [inputText]);
 
   const handleSubmit = useCallback(() => {
     setLoading(true);
@@ -61,7 +69,7 @@ export default function Home() {
     setDataPointStates(initialDataPointStates);
 
     const promises = initialDataPointStates.map((d: DataPointState) => {
-      return sendDataRequest(d);
+      return sendDataRequest(d, abortController.signal);
     });
 
     Promise.all(promises).then(() => {
@@ -69,12 +77,13 @@ export default function Home() {
     });
   }, [inputText]);
 
-  const sendDataRequest = (dataBody: DataPointState) => {
+  const sendDataRequest = (dataBody: DataPointState, signal: AbortSignal) => {
     return fetch("/api/submit", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
+      signal,
       body: JSON.stringify({ data: dataBody }),
     })
       .then((response) => {
@@ -106,37 +115,39 @@ export default function Home() {
 
   const handleCancel = useCallback(() => {
     console.log("Cancelled");
+    abortController.abort();
+    setLoading(false);
   }, []);
 
   return (
     <main
-      className={`flex min-h-screen flex-col items-center justify-between p-24 ${inter.className}`}
+      className={`flex flex-col items-center justify-between p-4 lg:p-24 ${inter.className}`}
     >
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <div className="mb-4">
-          {" "}
-          <p className="text-lg font-bold mb-2">BioInformatics</p>
-          <div className="flex space-x-4">
-            {availableFormats.map((format) => (
-              <button
-                className={`${
-                  selectedFormat === format ? "bg-gray-300" : ""
-                } px-4 py-2 rounded-md`}
-                key={format}
-                onClick={() => handleFormatSelect(format)}
-              >
-                {format}
-              </button>
-            ))}
-          </div>
+      <div className="max-w-5xl w-full">
+        <p className="text-lg font-bold mb-2">BioInformatics</p>
+        <div className="flex space-x-4 mb-4">
+          {availableFormats.map((format) => (
+            <button
+              className={`${
+                selectedFormat === format ? "bg-gray-300" : ""
+              } px-4 py-2 rounded-md`}
+              key={format}
+              onClick={() => handleFormatSelect(format)}
+            >
+              {format}
+            </button>
+          ))}
         </div>
-        <div className="flex mt-4">
-          <TextArea
-            value={inputText}
-            onChange={handleInputChange}
-            format={selectedFormat || ""}
-          />
-          <div className="flex flex-col ml-4">
+        <div className="flex flex-col lg:flex-row">
+          <div className="flex-grow">
+            {" "}
+            <TextArea
+              value={inputText}
+              onChange={handleInputChange}
+              format={selectedFormat || ""}
+            />
+          </div>
+          <div className="flex flex-col lg:flex-col justify-center ml-0 lg:ml-4 mt-4 lg:mt-0">
             <ButtonComponent
               onClick={handleSubmit}
               displayText="Submit"
@@ -148,10 +159,15 @@ export default function Home() {
               displayColor="red"
               displayText="Cancel"
             />
+            <ButtonComponent
+              onClick={handleReset}
+              displayColor="blue"
+              displayText="Reset"
+            />
           </div>
         </div>
       </div>
-      <VisualizeResult dataPointStates={dataPointStates} />
+      <VisualizeResultTable dataPointStates={dataPointStates} />
     </main>
   );
 }

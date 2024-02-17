@@ -16,13 +16,14 @@ const ButtonComponent = ({
       className={`px-6 py-3 text-black border border-black rounded-md mb-4 focus:outline-none hover:${displayColor}-600`}
       onClick={onClick}
       style={{
-        width: "80pt",
+        width: "100%", // Adjust width
+        maxWidth: "200px", // Set a maximum width
         height: "40pt",
-        position: "relative", // Add position relative to parent
+        position: "relative",
       }}
-      disabled={loading} // Disable the button when loading
+      disabled={loading}
     >
-      {loading && ( // If loading is true, display the spinner
+      {loading && (
         <div
           style={{
             position: "absolute",
@@ -34,7 +35,7 @@ const ButtonComponent = ({
           Loading...
         </div>
       )}
-      {!loading && displayText} {/* Display the text if not loading */}
+      {!loading && displayText}
     </button>
   );
 };

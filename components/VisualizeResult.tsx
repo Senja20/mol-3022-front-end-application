@@ -1,14 +1,56 @@
 import { DataPointState } from "@/types/DataPointState";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaSpinner } from "react-icons/fa";
 
 function VisualizeResult({
+  dataPointState,
+}: {
+  dataPointState: DataPointState;
+}) {
+  const [isLoading, setIsLoading] = useState(!dataPointState.requestFinished);
+
+  useEffect(() => {
+    console.log(dataPointState.requestFinished);
+    setIsLoading(!dataPointState.requestFinished);
+  }, [dataPointState.requestFinished]);
+
+  return (
+    <div
+      key={dataPointState.id}
+      className={`data-point ${
+        dataPointState.requestFinished ? "finished" : "pending"
+      }`}
+    >
+      <p>
+        <strong>ID:</strong> {dataPointState.id}
+      </p>
+      {isLoading ? (
+        <div className="loading-spinner">
+          <FaSpinner className="spinner-icon" />
+        </div>
+      ) : (
+        <div>
+          <p>
+            <strong>Header:</strong> {dataPointState.data.header}
+          </p>
+          <p>
+            <strong>Sequence:</strong> {dataPointState.data.sequence}
+          </p>
+          <p>
+            <strong>Prediction:</strong>{" "}
+            {dataPointState.prediction ? "Yes" : "No"}
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function VisualizeResultTable({
   dataPointStates,
 }: {
   dataPointStates: DataPointState[];
 }) {
-  const [isLoading, setIsLoading] = useState(true);
-
   return (
     <div className="w-full pt-4">
       {dataPointStates.map((dataPointState) => (
@@ -18,16 +60,11 @@ function VisualizeResult({
             dataPointState.requestFinished ? "finished" : "pending"
           }`}
         >
-          <p>
-            <strong>ID:</strong> {dataPointState.id}
-          </p>
-          <div className="loading-spinner">
-            <FaSpinner className="spinner-icon" />
-          </div>
+          <VisualizeResult dataPointState={dataPointState} />
         </div>
       ))}
     </div>
   );
 }
 
-export default VisualizeResult;
+export default VisualizeResultTable;

@@ -1,5 +1,5 @@
-import { Fasta } from "@/Fasta";
-import { Fastq } from "@/Fastq";
+import { Fasta } from "@/Classes/Fasta";
+import { Fastq } from "@/Classes/Fastq";
 
 export interface DataPointState {
   id: string;
