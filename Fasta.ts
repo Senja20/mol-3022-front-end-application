@@ -2,7 +2,7 @@ class Fasta {
   private _header: string;
   private _sequence: string;
 
-  /*
+  /**
    * [constructor description] Creates a Fasta object.
    * @param {string} header
    * @param {string} sequence
@@ -35,12 +35,12 @@ class Fasta {
 }
 
 class FastaParser {
-  /*
+  /**
    * [parse description] Parses a string in .fasta format and returns a Fasta object.
    * @param {string}
    * @throws {Error} Input is required
    * @throws {Error} Input is not in .fasta format. Lack of '>' at the beginning of the header.
-   */
+   **/
   static parse(input: string): Fasta {
     // lacks header and sequence
     if (input.split("\n").length < 2) {
@@ -55,14 +55,14 @@ class FastaParser {
     return new Fasta(header, sequence);
   }
 
-  /*
+  /**
    * [parseMultiple description] Parses a string in .fasta format and returns an array of Fasta objects.
    * @param {string}
    * @throws {Error} Input is required
    * @throws {Error} Input is not in .fasta format. Lack of '>' at the beginning of the header.
    * @example
    * parseMultiple(`>header1 \n sequence1 \n >header2 \n sequence2`);
-   * */
+   **/
   static parseMultiple(input: string): Fasta[] {
     if (!input) {
       throw new Error("Input is required");
