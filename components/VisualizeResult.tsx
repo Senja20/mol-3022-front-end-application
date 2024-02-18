@@ -10,7 +10,6 @@ function VisualizeResult({
   const [isLoading, setIsLoading] = useState(!dataPointState.requestFinished);
 
   useEffect(() => {
-    console.log(dataPointState.requestFinished);
     setIsLoading(!dataPointState.requestFinished);
   }, [dataPointState.requestFinished]);
 
@@ -21,27 +20,29 @@ function VisualizeResult({
         dataPointState.requestFinished ? "finished" : "pending"
       }`}
     >
-      <p>
+      <p color="black">
         <strong>ID:</strong> {dataPointState.id}
       </p>
-      {isLoading ? (
-        <div className="loading-spinner">
-          <FaSpinner className="spinner-icon" />
-        </div>
-      ) : (
-        <div>
-          <p>
-            <strong>Header:</strong> {dataPointState.data.header}
-          </p>
-          <p>
-            <strong>Sequence:</strong> {dataPointState.data.sequence}
-          </p>
-          <p>
-            <strong>Prediction:</strong>{" "}
-            {dataPointState.prediction ? "Yes" : "No"}
-          </p>
-        </div>
-      )}
+      <div className={`content ${isLoading ? "loading" : "loaded"}`}>
+        {isLoading ? (
+          <div className="loading-spinner">
+            <FaSpinner className="spinner-icon" color="black" />
+          </div>
+        ) : (
+          <div>
+            <p>
+              <strong>Header:</strong> {dataPointState.data.header}
+            </p>
+            <p>
+              <strong>Sequence:</strong> {dataPointState.data.sequence}
+            </p>
+            <p>
+              <strong>Prediction:</strong>{" "}
+              {dataPointState.prediction ? "Yes" : "No"}
+            </p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

@@ -55,7 +55,6 @@ main {
 
 .pending {
   background-color: black;
-  color: white;
 }
 
 .loading-spinner {
@@ -65,6 +64,8 @@ main {
   display: flex;
   justify-content: center;
   align-items: center;
+  opacity: 1;
+  transition: opacity 0s ease;
 }
 
 .spinner-icon {
@@ -79,4 +80,30 @@ main {
   100% {
     transform: rotate(360deg); /* define the spinning animation*/
   }
+}
+
+.data-point {
+  transition: background-color 1.3s ease;
+}
+
+.data-point.pending {
+  background-color: yellow;
+}
+
+.data-point.finished {
+  background-color: lightgreen;
+}
+
+.content {
+  transition: opacity 1s ease;
+}
+
+.content.loading {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.content.loaded {
+  opacity: 1;
+  pointer-events: auto;
 }
