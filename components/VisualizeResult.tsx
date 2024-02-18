@@ -17,13 +17,17 @@ function VisualizeResult({
     <div
       key={dataPointState.id}
       className={`data-point ${
-        dataPointState.requestFinished ? "finished" : "pending"
+        dataPointState.requestFinished
+          ? dataPointState.prediction
+            ? "finished-positive"
+            : "finished-negative"
+          : "pending"
       }`}
     >
       <p color="black">
         <strong>ID:</strong> {dataPointState.id}
       </p>
-      <div className={`content ${isLoading ? "loading" : "loaded"}`}>
+      <div>
         {isLoading ? (
           <div className="loading-spinner">
             <FaSpinner className="spinner-icon" color="black" />

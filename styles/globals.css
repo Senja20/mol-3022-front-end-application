@@ -90,20 +90,10 @@ main {
   background-color: yellow;
 }
 
-.data-point.finished {
+.data-point.finished-positive {
   background-color: lightgreen;
 }
 
-.content {
-  transition: opacity 1s ease;
-}
-
-.content.loading {
-  opacity: 0;
-  pointer-events: none;
-}
-
-.content.loaded {
-  opacity: 1;
-  pointer-events: auto;
+.data-point.finished-negative {
+  background-color: lightcoral;
 }

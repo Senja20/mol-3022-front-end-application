@@ -57,7 +57,7 @@ class FastaParser {
 
   /**
    * [parseMultiple description] Parses a string in .fasta format and returns an array of Fasta objects.
-   * @param {string}
+   * @param {string} input - A string in .fasta format
    * @throws {Error} Input is required
    * @throws {Error} Input is not in .fasta format. Lack of '>' at the beginning of the header.
    * @example
