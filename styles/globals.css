@@ -70,7 +70,7 @@ main {
 
 .spinner-icon {
   /** based on: https://www.w3schools.com/css/css3_animations.asp */
-  animation: spin 1s linear infinite; /* this add the spinning animation*/
+  animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
@@ -78,7 +78,7 @@ main {
     * based on: https://developer.mozilla.org/en-US/docs/Web/CSS/@keyframes
   */
   100% {
-    transform: rotate(360deg); /* define the spinning animation*/
+    transform: rotate(360deg);
   }
 }
 
