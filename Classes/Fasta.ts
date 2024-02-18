@@ -51,7 +51,13 @@ class FastaParser {
       );
     }
 
-    const [header, sequence] = input.split("\n");
+    // pop the head
+    const linesList = input.split("\n");
+    const header = linesList.pop() as string;
+
+    // joint the rest into one string
+    const sequence = linesList.join("");
+
     return new Fasta(header, sequence);
   }
 
