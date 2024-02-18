@@ -1,24 +1,34 @@
-import { SetStateAction, useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { Inter } from "next/font/google";
 import ButtonComponent from "@/components/Button";
 import TextArea from "@/components/TextArea";
 import { Fasta, FastaParser } from "@/Classes/Fasta";
 import { Fastq, FastqParser } from "@/Classes/Fastq";
+import { Clustal, ClustalParser } from "@/Classes/Clustal";
 import { DataPointState } from "@/types/DataPointState";
 import { ResponseFormat } from "@/types/DataResponse";
 import VisualizeResultTable from "@/components/VisualizeResult";
-import { abort } from "process";
+import { Format, FormatInstance, FormatInstanceList } from "@/types/Format";
 
 const inter = Inter({ subsets: ["latin"] });
 
-const availableFormats = ["Fasta", "FASTQ"];
+const parserList: Record<Format, (input: string) => FormatInstanceList> = {
+  Fasta: FastaParser.parseMultiple,
+  FASTQ: FastqParser.parseMultiple,
+  Clustal: ClustalParser.parseMultiple,
+};
+
+const availableFormats: Format[] = ["Fasta", "FASTQ", "Clustal"];
 
 export default function Home() {
   const [inputText, setInputText] = useState<string>("");
-  const [selectedFormat, setSelectedFormat] = useState<string>(
+  const [selectedFormat, setSelectedFormat] = useState<Format>(
     availableFormats[0]
   );
-  const [loading, setLoading] = useState(false); // track the loading state
+
+  const selectedFormatRef = useRef(selectedFormat);
+
+  const [loading, setLoading] = useState(false);
 
   const [dataPointStates, setDataPointStates] = useState<DataPointState[]>([]);
 
@@ -31,12 +41,14 @@ export default function Home() {
     []
   );
 
-  const handleFormatSelect = useCallback(
-    (format: string) => {
-      setSelectedFormat(format);
-    },
-    [selectedFormat]
-  );
+  useEffect(() => {
+    selectedFormatRef.current = selectedFormat;
+  }, [selectedFormat]);
+
+  const handleFormatSelect = useCallback((format: Format) => {
+    setSelectedFormat(format);
+    console.log("Selected format:", format);
+  }, []);
 
   const handleReset = useCallback(() => {
     setInputText("");
@@ -46,13 +58,10 @@ export default function Home() {
   const handleSubmit = useCallback(() => {
     setLoading(true);
 
-    const data =
-      selectedFormat === "Fasta"
-        ? FastaParser.parseMultiple(inputText)
-        : FastqParser.parseMultiple(inputText);
+    const data = parserList[selectedFormatRef.current](inputText);
 
     const initialDataPointStates = data.map(
-      (d: Fasta | Fastq, index: number) => {
+      (d: FormatInstance, index: number) => {
         return {
           id: index + "",
           data: d,
@@ -66,6 +75,7 @@ export default function Home() {
       setLoading(false);
       return;
     }
+
     setDataPointStates(initialDataPointStates);
 
     const promises = initialDataPointStates.map((d: DataPointState) => {

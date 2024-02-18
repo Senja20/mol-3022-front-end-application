@@ -1,10 +1,9 @@
-import { Fasta } from "@/Classes/Fasta";
-import { Fastq } from "@/Classes/Fastq";
+import { FormatInstance } from "./Format";
 
 export interface DataPointState {
   id: string;
   prediction?: boolean;
   completeResponseString: string;
   requestFinished: boolean;
-  data: Fasta | Fastq;
+  data: FormatInstance;
 }
