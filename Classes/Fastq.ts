@@ -49,7 +49,7 @@ class FastqParser {
       );
     }
 
-    const [header, sequence, plus, quality] = input.split("\n");
+    const [header, sequence, _, quality] = input.split("\n");
     return new Fastq(header, sequence, quality);
   }
 
@@ -63,7 +63,7 @@ class FastqParser {
     const fastqObjects: Fastq[] = [];
 
     for (let i = 0; i < lines.length; i += 4) {
-      const [header, sequence, plus, quality] = lines.slice(i, i + 4);
+      const [header, sequence, _, quality] = lines.slice(i, i + 4);
       fastqObjects.push(new Fastq(header, sequence, quality));
     }
 

@@ -1,7 +1,7 @@
 import { Fasta } from "@/Classes/Fasta";
 import parserList, { availableFormats } from "./parseList";
 import { MutableRefObject } from "react";
-import { Format, FormatInstanceList } from "@/types/Format";
+import { Format } from "@/types/Format";
 
 /**
  * @description Convert the provided data to fasta format
