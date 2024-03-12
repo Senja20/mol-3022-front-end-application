@@ -5,7 +5,7 @@ class Clustal implements FormatClass {
   private _sequence: string;
   private _length: string;
 
-  constructor(header: string, sequence: string, length: string = "") {
+  constructor(header: string, sequence: string, length = "") {
     if (!header) {
       throw new Error("Header is required");
     }

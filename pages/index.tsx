@@ -1,4 +1,10 @@
-import React, { useState, useCallback, useRef, useEffect } from "react";
+import React, {
+  useState,
+  useCallback,
+  useRef,
+  useEffect,
+  useMemo,
+} from "react";
 import { Inter } from "next/font/google";
 import ButtonComponent from "@/components/Button";
 import TextArea from "@/components/TextArea";
@@ -23,7 +29,7 @@ export default function Home() {
 
   const [dataPointStates, setDataPointStates] = useState<DataPointState[]>([]);
 
-  const abortController = new AbortController();
+  const abortController = useMemo(() => new AbortController(), []);
 
   const handleInputChange = useCallback(
     (event: React.ChangeEvent<HTMLTextAreaElement>) => {
