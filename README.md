@@ -16,13 +16,47 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+# Project Name
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+## Getting Started
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+To get started with the project, follow these steps:
+
+1. Clone the repository: `git clone <repository-url>`
+2. Navigate to the project directory: `cd project-directory`
+3. Install the dependencies: `npm install` or `yarn install`
+4. Run the development server: `npm run dev` or `yarn dev`
+5. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+## Available Scripts
+
+In the project directory, you can run the following scripts:
+
+### `npm run dev` or `yarn dev`
+
+Runs the development server.<br />
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+
+### `npm run build` or `yarn build`
+
+Builds the app for production to the `build` folder.<br />
+It correctly bundles Next.js in production mode and optimizes the build for the best performance.
+
+### `npm start` or `yarn start`
+
+Starts the production server.<br />
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+
+### `npm run lint` or `yarn lint`
+
+Runs the linter to check for code style and formatting issues.
+
+### `npm run test` or `yarn test`
+
+Launches the test runner in the interactive watch mode.<br />
+See the section about [running tests](https://nextjs.org/docs/testing) for more information.
 
 ## Learn More
 
@@ -31,10 +65,14 @@ To learn more about Next.js, take a look at the following resources:
 - [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
 - [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## Deployment
 
-## Deploy on Vercel
+This project can be deployed to various platforms. Refer to the official Next.js documentation for deployment instructions.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Contributing
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Contributions are welcome! Please refer to the project's [contribution guidelines](CONTRIBUTING.md) for more information.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
