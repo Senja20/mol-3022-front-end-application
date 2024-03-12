@@ -87,14 +87,21 @@ export default function Home() {
     });
   }, [inputText]);
 
-  const sendDataRequest = (dataBody: DataPointState, signal: AbortSignal) => {
-    return fetch("/api/submit", {
+  const sendDataRequest = async (
+    dataBody: DataPointState,
+    signal: AbortSignal
+  ) => {
+    return fetch("http://localhost:8080/inference", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       signal,
-      body: JSON.stringify({ data: dataBody }),
+      body: JSON.stringify({
+        header: dataBody.data.header,
+        sequence: dataBody.data.sequence,
+        threshold: 0.5,
+      }),
     })
       .then((response) => {
         if (!response.ok) {
@@ -109,10 +116,12 @@ export default function Home() {
               return d;
             }
 
+            console.log(data);
+
             return {
               ...d,
               requestFinished: true,
-              prediction: data.prediction,
+              prediction: data.positive > 0.7,
               completeResponseString: JSON.stringify(data),
             };
           });

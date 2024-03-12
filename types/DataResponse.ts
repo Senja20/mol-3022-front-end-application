@@ -1,6 +1,7 @@
 import { keys } from "ts-transformer-keys";
 
 export interface ResponseFormat {
-  id: string;
-  prediction: boolean;
+  positive: number;
+  negative: number;
+  predicted: string;
 }
