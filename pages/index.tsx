@@ -2,23 +2,13 @@ import { useState, useCallback, useRef, useEffect } from "react";
 import { Inter } from "next/font/google";
 import ButtonComponent from "@/components/Button";
 import TextArea from "@/components/TextArea";
-import { Fasta, FastaParser } from "@/Classes/Fasta";
-import { Fastq, FastqParser } from "@/Classes/Fastq";
-import { Clustal, ClustalParser } from "@/Classes/Clustal";
 import { DataPointState } from "@/types/DataPointState";
 import { ResponseFormat } from "@/types/DataResponse";
 import VisualizeResultTable from "@/components/VisualizeResult";
 import { Format, FormatInstance, FormatInstanceList } from "@/types/Format";
+import parserList, { availableFormats } from "@/utils/parseList";
 
 const inter = Inter({ subsets: ["latin"] });
-
-const parserList: Record<Format, (input: string) => FormatInstanceList> = {
-  Fasta: FastaParser.parseMultiple,
-  FASTQ: FastqParser.parseMultiple,
-  Clustal: ClustalParser.parseMultiple,
-};
-
-const availableFormats: Format[] = ["Fasta", "FASTQ", "Clustal"];
 
 export default function Home() {
   const [inputText, setInputText] = useState<string>("");
@@ -91,7 +81,12 @@ export default function Home() {
     dataBody: DataPointState,
     signal: AbortSignal
   ) => {
-    return fetch("http://localhost:8080/inference", {
+    const urlInference = process.env.API_URL;
+    if (!urlInference) {
+      throw new Error("API_URL is not defined");
+    }
+
+    return fetch(urlInference, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
