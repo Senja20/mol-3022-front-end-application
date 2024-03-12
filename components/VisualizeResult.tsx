@@ -1,3 +1,4 @@
+import React from "react";
 import { DataPointState } from "@/types/DataPointState";
 import { useEffect, useState } from "react";
 import { FaSpinner } from "react-icons/fa";

@@ -1,11 +1,16 @@
-import { useState, useCallback, useRef, useEffect } from "react";
+import React, {
+  useState,
+  useCallback,
+  useRef,
+  useEffect,
+  useMemo,
+} from "react";
 import { Inter } from "next/font/google";
 import ButtonComponent from "@/components/Button";
 import TextArea from "@/components/TextArea";
 import { DataPointState } from "@/types/DataPointState";
-import { ResponseFormat } from "@/types/DataResponse";
 import VisualizeResultTable from "@/components/VisualizeResult";
-import { Format, FormatInstance, FormatInstanceList } from "@/types/Format";
+import { Format, FormatInstance } from "@/types/Format";
 import { availableFormats } from "@/utils/parseList";
 import convertToFasta from "@/utils/convertToFasta";
 import sendDataRequest from "@/utils/dataRequest";
@@ -24,7 +29,7 @@ export default function Home() {
 
   const [dataPointStates, setDataPointStates] = useState<DataPointState[]>([]);
 
-  const abortController = new AbortController();
+  const abortController = useMemo(() => new AbortController(), []);
 
   const handleInputChange = useCallback(
     (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -45,7 +50,7 @@ export default function Home() {
   const handleReset = useCallback(() => {
     setInputText("");
     setDataPointStates([]);
-  }, [inputText]);
+  }, []);
 
   const handleSubmit = useCallback(() => {
     setLoading(true);
@@ -77,13 +82,13 @@ export default function Home() {
     Promise.all(promises).then(() => {
       setLoading(false);
     });
-  }, [inputText]);
+  }, [inputText, abortController.signal]);
 
   const handleCancel = useCallback(() => {
     console.log("Cancelled");
     abortController.abort();
     setLoading(false);
-  }, []);
+  }, [abortController]);
 
   return (
     <main

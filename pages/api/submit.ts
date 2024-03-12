@@ -9,7 +9,7 @@ type Data = {
 const randomInt = (min: number, max: number) =>
   Math.floor(Math.random() * (max - min + 1)) + min;
 
-export default (req: NextApiRequest, res: NextApiResponse<Data>) => {
+const handle = (req: NextApiRequest, res: NextApiResponse<Data>) => {
   if (req.method !== "POST") {
     res.status(405);
     return;
@@ -21,3 +21,5 @@ export default (req: NextApiRequest, res: NextApiResponse<Data>) => {
       .json({ prediction: !!randomInt(0, 1), id: req.body.data.id });
   }, randomInt(2000, 5000));
 };
+
+export default handle;
