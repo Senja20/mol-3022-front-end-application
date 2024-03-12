@@ -6,7 +6,9 @@ import { DataPointState } from "@/types/DataPointState";
 import { ResponseFormat } from "@/types/DataResponse";
 import VisualizeResultTable from "@/components/VisualizeResult";
 import { Format, FormatInstance, FormatInstanceList } from "@/types/Format";
-import parserList, { availableFormats } from "@/utils/parseList";
+import { availableFormats } from "@/utils/parseList";
+import convertToFasta from "@/utils/convertToFasta";
+import sendDataRequest from "@/utils/dataRequest";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -48,7 +50,7 @@ export default function Home() {
   const handleSubmit = useCallback(() => {
     setLoading(true);
 
-    const data = parserList[selectedFormatRef.current](inputText);
+    const data = convertToFasta(inputText, selectedFormatRef);
 
     const initialDataPointStates = data.map(
       (d: FormatInstance, index: number) => {
@@ -69,63 +71,13 @@ export default function Home() {
     setDataPointStates(initialDataPointStates);
 
     const promises = initialDataPointStates.map((d: DataPointState) => {
-      return sendDataRequest(d, abortController.signal);
+      return sendDataRequest(d, abortController.signal, setDataPointStates);
     });
 
     Promise.all(promises).then(() => {
       setLoading(false);
     });
   }, [inputText]);
-
-  const sendDataRequest = async (
-    dataBody: DataPointState,
-    signal: AbortSignal
-  ) => {
-    const urlInference = process.env.API_URL;
-    if (!urlInference) {
-      throw new Error("API_URL is not defined");
-    }
-
-    return fetch(urlInference, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      signal,
-      body: JSON.stringify({
-        header: dataBody.data.header,
-        sequence: dataBody.data.sequence,
-        threshold: 0.5,
-      }),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
-      .then((data: ResponseFormat) => {
-        setDataPointStates((prevState) => {
-          return prevState.map((d) => {
-            if (d.id !== dataBody.id) {
-              return d;
-            }
-
-            console.log(data);
-
-            return {
-              ...d,
-              requestFinished: true,
-              prediction: data.positive > 0.7,
-              completeResponseString: JSON.stringify(data),
-            };
-          });
-        });
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-  };
 
   const handleCancel = useCallback(() => {
     console.log("Cancelled");
