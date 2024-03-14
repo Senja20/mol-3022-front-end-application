@@ -8,9 +8,9 @@ describe("parse", () => {
       "MAPTLFQKLFSKRTGLGAPGRDARDPDCGFSWPLPEFDPSQIRLIVYQDCERRGRNVLFDSSVKRRNEDI";
 
     const combined_sequence_1 = `>${header}\n${sequence}`;
-    expect(parserList["Fasta"](combined_sequence_1)).toEqual([
-      new Fasta(header, sequence),
-    ]);
+    expect(parserList["Fasta"](combined_sequence_1)).toEqual(
+      new Fasta(header, sequence)
+    );
   });
 
   it("two elements in the provided data", () => {
