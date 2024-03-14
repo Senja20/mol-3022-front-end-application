@@ -1,5 +1,4 @@
 export interface ResponseFormat {
-  positive: number;
-  negative: number;
-  predicted: string;
+  sp: number;
+  no_sp: number;
 }

@@ -47,7 +47,7 @@ const sendDataRequest = async (
           return {
             ...d,
             requestFinished: true,
-            prediction: data.positive > +threshold,
+            prediction: data.sp > +threshold,
             completeResponseString: JSON.stringify(data),
           };
         });
