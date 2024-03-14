@@ -8,7 +8,6 @@ describe("parse", () => {
       "MAPTLFQKLFSKRTGLGAPGRDARDPDCGFSWPLPEFDPSQIRLIVYQDCERRGRNVLFDSSVKRRNEDI";
 
     const combined_sequence_1 = `>${header}\n${sequence}`;
-    console.log(combined_sequence_1);
     expect(parserList["Fasta"](combined_sequence_1)).toEqual([
       new Fasta(header, sequence),
     ]);
@@ -24,7 +23,6 @@ describe("parse", () => {
       "MAPTLFQKLFSKRTGLGAPGRDARDPDCGFSWPLPEFDPSQIRLIVYQDCERRGRNVLFDSSVKRRNEDI";
 
     const combined_sequence_2 = `>${header1}\n${sequence1}\n>${header2}\n${sequence2}`;
-    console.log(combined_sequence_2);
     expect(parserList["Fasta"](combined_sequence_2)).toEqual([
       new Fasta(header1, sequence1),
       new Fasta(header2, sequence2),
