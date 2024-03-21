@@ -1,6 +1,6 @@
 # MOL3022 - Front End - Signal Peptide
 
-The project is the front the part of a signal peptide prediction project in the "MOL3022 - Bioinformatics - Method Oriented Project" course. The application is taking data (protein strings) and is sending those string to the backend where it uses those to make predictions, then the application displays the results to the user. This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+The project is the front the part of a signal peptide prediction project in the "MOL3022 - Bioinformatics - Method Oriented Project" course. The application is taking data (protein strings) and is sending those string to the backend where it uses those to make predictions, then the application displays the results to the user. The application is implemented for pre-processing of data which allows the user to find out if a protein sequence has a peptide or not. The results will allow the users to separate the data into sequences with and without signal peptide. The project depends the backend called `MOL3022-bioinformatics-project`. This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
 
@@ -17,37 +17,30 @@ Make sure that you have the following installed on your system:
 
 To get started with the project, follow these steps:
 
-1. Navigate to the project directory: `cd project-directory`
+1. Navigate to the project directory: `cd <project-directory>`
 2. Install the dependencies: `npm install`
 3. Run the development server: `npm run dev`
 4. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 ## Available Scripts
 
-In the project directory, you can run the following scripts:
+In the project directory, you can run the following scripts (commands are define the in the `package.json`):
 
 ### `npm run dev`
 
-Runs the development server.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser (as mentioned above).
+Runs the development server. Open [http://localhost:3000](http://localhost:3000) to view it in the browser (as mentioned above).
 
 ### `npm run build`
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles Next.js in production mode and optimizes the build for the best performance.
-
-### `npm start`
-
-Starts the production server.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Builds the app for production to the `build` folder. It correctly bundles Next.js in production mode and optimizes the build for the best performance.
 
 ### `npm run lint`
 
-Runs the linter to check for code style and formatting issues.
+Runs the linter to check for code style and formatting issues. This project uses the [ESlint](https://eslint.org/) for linting. If you use VSCode, it is recommended to use the [VSCode ESLinter Extension](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint). If you prefer JetBrain products, [WebStorm ESLint Plugin](https://www.jetbrains.com/help/webstorm/eslint.html) and [IntelliJ IDEs Plugin](https://plugins.jetbrains.com/plugin/7494-eslint) are available.
 
 ### `npm run test`
 
-Launches the test runner in the interactive watch mode. See the section about [running tests](https://nextjs.org/docs/testing) for more information.
+Run the automated tests and output the testing results. See the Next.js documentation about [running tests](https://nextjs.org/docs/app/building-your-application/testing/jest).
 
 ## The Page
 
