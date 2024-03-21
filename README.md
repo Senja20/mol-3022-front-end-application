@@ -55,6 +55,14 @@ The main page is comprised of an input filed (purple), the data formats that the
 
 ![](main-page-colors.png)
 
+The data can be downloaded as demonstrated:
+
+![](downlaod-data.gif)
+
+The threshold can be chosen. The threshold has to be chosen by sliding the slider as demonstrated:
+
+![](slider-threshold.gif)
+
 ## The Results
 
 The provided data is parsed, and for each data point a separate prediction is performed. The prediction can be above the threshold (green) or the below (red). Each data points gets an associated ID. Also each results can be expanded and see the more exact resulting values.
