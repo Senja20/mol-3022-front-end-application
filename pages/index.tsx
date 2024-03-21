@@ -55,7 +55,55 @@ export default function Home() {
     setDataPointStates([]);
   }, []);
 
+  const exportData = useCallback(() => {
+    // IF there is no data, return
+    if (dataPointStates.length === 0) {
+      alert("No data to export");
+      return;
+    }
+
+    // if loading, return
+    if (loading) {
+      alert("Please wait until the request is finished");
+      return;
+    }
+
+    // Create a blob from the dataPointStates array
+    const url = URL.createObjectURL(
+      new Blob([JSON.stringify(dataPointStates)], {
+        type: "application/json",
+      })
+    );
+
+    // Create an anchor element and click on it to download the file
+    const a = document.createElement("a");
+
+    // Set the href and download attributes
+    a.href = url;
+
+    // Set the download attribute
+    a.download = "data.json";
+
+    // Append the anchor element to the body
+    document.body.appendChild(a);
+
+    // Click on the anchor element
+    a.click();
+
+    // Remove the anchor element
+    document.body.removeChild(a);
+
+    // Revoke the object URL
+    URL.revokeObjectURL(url);
+  }, [dataPointStates, loading]);
+
   const handleSubmit = useCallback(() => {
+    // If the input text is empty, return
+    if (inputText.trim() === "") {
+      alert("Please enter some text");
+      return;
+    }
+
     setLoading(true);
 
     const data = convertToFasta(inputText, selectedFormatRef);
@@ -75,13 +123,16 @@ export default function Home() {
       }
     );
 
+    // If there is no data, return
     if (initialDataPointStates.length === 0) {
       setLoading(false);
+      alert("No data to process");
       return;
     }
 
     setDataPointStates(initialDataPointStates);
 
+    // Create an array of promises
     const promises = initialDataPointStates.map((d: DataPointState) => {
       return sendDataRequest(
         d,
@@ -91,6 +142,7 @@ export default function Home() {
       );
     });
 
+    // Wait for all the promises to resolve
     Promise.all(promises).then(() => {
       setLoading(false);
     });
@@ -176,6 +228,11 @@ export default function Home() {
               onClick={handleReset}
               displayColor="blue"
               displayText="Reset"
+            />
+            <ButtonComponent
+              onClick={exportData}
+              displayColor="yellow"
+              displayText="Export Data"
             />
           </div>
         </div>
