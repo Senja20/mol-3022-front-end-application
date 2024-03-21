@@ -55,11 +55,11 @@ The main page is comprised of an input filed (purple), the data formats that the
 
 ![](main-page-colors.png)
 
-The data can be downloaded as demonstrated:
+The data can be downloaded as demonstrated the the following GIF:
 
 ![](downlaod-data.gif)
 
-The threshold can be chosen. The threshold has to be chosen by sliding the slider as demonstrated:
+The threshold can be chosen. The threshold has to be chosen by sliding the slider as demonstrated by the following GIF:
 
 ![](slider-threshold.gif)
 
@@ -72,3 +72,97 @@ The provided data is parsed, and for each data point a separate prediction is pe
 The expansion and closing is demonstrated by the following GIF:
 
 ![](expand-and-close.gif)
+
+## The Data Types and Interfaces
+
+Different structures are used in the application. This sections describes of each those structures, that save represented by interface and types.
+
+### FormatClass
+
+This interface represents a format class with the following properties:
+
+- `header`: A string representing the header.
+- `sequence`: A string representing the sequence.
+- `format`: A string representing the format.
+
+```ts
+export interface FormatClass {
+  header: string;
+  sequence: string;
+  format: string;
+}
+```
+
+### FormatParser
+
+This interface represents a format parser with the following methods:
+
+- `parse(input: string)`: This method takes a string as input and returns a `FormatInstance`.
+- `multipleParse(input: string)`: This method takes a string as input and returns a `FormatInstanceList`.
+
+```ts
+export interface FormatParser {
+  parse(input: string): FormatInstance;
+  multipleParse(input: string): FormatInstanceList;
+}
+```
+
+### Format
+
+This is a type that can be either "Fasta", "FASTQ", or "Clustal".
+
+```ts
+export type Format = "Fasta" | "FASTQ" | "Clustal";
+```
+
+### FormatInstanceList
+
+This is a type that can be an array of `Fasta`, `Fastq`, or `Clustal`.
+
+```ts
+export type FormatInstanceList = Fasta[] | Fastq[] | Clustal[];
+```
+
+### FormatInstance
+
+This is a type that can be either `Fasta`, `Fastq`, or `Clustal`.
+
+```ts
+export type FormatInstance = Fasta | Fastq | Clustal;
+```
+
+### ResponseFormat
+
+This interface represents a response format with the following properties:
+
+- `sp`: A number representing the sp.
+- `no_sp`: A number representing the no_sp.
+
+```ts
+export interface ResponseFormat {
+  sp: number;
+  no_sp: number;
+}
+```
+
+### DataPointState
+
+This interface represents a data point state with the following properties:
+
+- `id`: A string representing the id.
+- `prediction`: An optional boolean representing the prediction.
+- `completeResponseString`: A string representing the complete response string.
+- `requestFinished`: A boolean representing if the request has finished.
+- `data`: A `FormatInstance` representing the data.
+- `result`: A `ResponseFormat` representing the result.
+
+```ts
+export interface DataPointState {
+  id: string;
+  prediction?: boolean;
+  completeResponseString: string;
+  requestFinished: boolean;
+  data: FormatInstance;
+  result: ResponseFormat;
+}
+```
