@@ -162,7 +162,7 @@ export interface DataPointState {
 
 ## Structure of the Application
 
-The file `pages/index.tsx` is the access point for the application. The application uses components from the `components` folder. The types are placed in the `types` folder and styling is placed in the `styles`. Important files are the following:
+The file `pages/index.tsx` is the access point for the application. The application uses components from the `components` folder. The types are placed in the `types` folder and styling is placed in the `styles`. Config files of the project are the following:
 
 - `package.json` - the [dependencies and configurations](https://docs.npmjs.com/cli/v10/configuring-npm/package-json) of the project in a JSON format. The file is used when using the command `npm install` to install the project dependencies.
 - `.eslintrc.js` - the [linting configurations](https://eslint.org/docs/latest/use/configure/configuration-files) file. The configurations are used for the linting process ESLint and the linting in the GitHub pipeline.
