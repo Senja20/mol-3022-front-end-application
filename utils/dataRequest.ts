@@ -1,20 +1,23 @@
 import { DataPointState } from "@/types/DataPointState";
 import { ResponseFormat } from "@/types/DataResponse";
 
+/**
+ * @description Sends a request to the server with the data provided
+ * @param dataBody (`DataPointState`): The data to be sent to the server
+ * @param signal  (`AbortSignal`): The signal to be used to cancel the request
+ * @param setDataPointStates  (`React.Dispatch<React.SetStateAction<DataPointState[]>>`): The state setter function to update the state of the data points
+ * @returns (`Promise<void>`): A promise that resolves when the request is finished
+ */
 const sendDataRequest = async (
   dataBody: DataPointState,
   signal: AbortSignal,
-  setDataPointStates: React.Dispatch<React.SetStateAction<DataPointState[]>>
+  setDataPointStates: React.Dispatch<React.SetStateAction<DataPointState[]>>,
+  threshold: number
 ) => {
   const urlInference = process.env.API_URL;
-  const threshold = process.env.THRESHOLD;
 
   if (!urlInference) {
     throw new Error("API_URL is not defined");
-  }
-
-  if (!threshold) {
-    throw new Error("THRESHOLD is not defined");
   }
 
   return fetch(urlInference, {
@@ -26,7 +29,6 @@ const sendDataRequest = async (
     body: JSON.stringify({
       header: dataBody.data.header,
       sequence: dataBody.data.sequence,
-      threshold: +threshold,
     }),
   })
     .then((response) => {
@@ -42,13 +44,12 @@ const sendDataRequest = async (
             return d;
           }
 
-          console.log(data);
-
           return {
             ...d,
             requestFinished: true,
-            prediction: data.sp > +threshold,
+            prediction: data.sp > threshold,
             completeResponseString: JSON.stringify(data),
+            result: data,
           };
         });
       });

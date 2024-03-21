@@ -2,6 +2,7 @@ import React from "react";
 import { DataPointState } from "@/types/DataPointState";
 import { useEffect, useState } from "react";
 import { FaSpinner } from "react-icons/fa";
+import { GoChevronDown, GoChevronUp } from "react-icons/go";
 
 function VisualizeResult({
   dataPointState,
@@ -9,6 +10,7 @@ function VisualizeResult({
   dataPointState: DataPointState;
 }) {
   const [isLoading, setIsLoading] = useState(!dataPointState.requestFinished);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   useEffect(() => {
     setIsLoading(!dataPointState.requestFinished);
@@ -34,7 +36,14 @@ function VisualizeResult({
             <FaSpinner className="spinner-icon" color="black" />
           </div>
         ) : (
-          <div>
+          <div className="result-content">
+            <div className="content-header">
+              {isExpanded ? (
+                <GoChevronDown onClick={() => setIsExpanded(false)} />
+              ) : (
+                <GoChevronUp onClick={() => setIsExpanded(true)} />
+              )}
+            </div>
             <p>
               <strong>Header:</strong> {dataPointState.data.header}
             </p>
@@ -45,6 +54,16 @@ function VisualizeResult({
               <strong>Prediction:</strong>{" "}
               {dataPointState.prediction ? "Yes" : "No"}
             </p>
+            {isExpanded && (
+              <div className="data-point">
+                <strong>Result:</strong>
+
+                <p className="relative left-5">
+                  <li>sp: {dataPointState.result.sp.toFixed(3)}</li>
+                  <li>no sp: {dataPointState.result.no_sp.toFixed(3)}</li>
+                </p>
+              </div>
+            )}
           </div>
         )}
       </div>

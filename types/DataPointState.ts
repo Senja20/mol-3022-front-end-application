@@ -6,4 +6,8 @@ export interface DataPointState {
   completeResponseString: string;
   requestFinished: boolean;
   data: FormatInstance;
+  result: {
+    sp: number;
+    no_sp: number;
+  };
 }

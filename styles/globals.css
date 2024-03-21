@@ -97,3 +97,14 @@ main {
 .data-point.finished-negative {
   background-color: lightcoral;
 }
+
+.result-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.content-header {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: -1% !important;
+}

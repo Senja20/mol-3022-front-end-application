@@ -14,6 +14,7 @@ import { Format, FormatInstance } from "@/types/Format";
 import { availableFormats } from "@/utils/parseList";
 import convertToFasta from "@/utils/convertToFasta";
 import sendDataRequest from "@/utils/dataRequest";
+import { Slider } from "@nextui-org/react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -30,6 +31,8 @@ export default function Home() {
   const [dataPointStates, setDataPointStates] = useState<DataPointState[]>([]);
 
   const abortController = useMemo(() => new AbortController(), []);
+
+  const [threshold, setThreshold] = useState<number>(90);
 
   const handleInputChange = useCallback(
     (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -64,6 +67,10 @@ export default function Home() {
           data: d,
           requestFinished: false,
           completeResponseString: "",
+          result: {
+            sp: 0,
+            no_sp: 0,
+          },
         };
       }
     );
@@ -76,13 +83,18 @@ export default function Home() {
     setDataPointStates(initialDataPointStates);
 
     const promises = initialDataPointStates.map((d: DataPointState) => {
-      return sendDataRequest(d, abortController.signal, setDataPointStates);
+      return sendDataRequest(
+        d,
+        abortController.signal,
+        setDataPointStates,
+        threshold / 100
+      );
     });
 
     Promise.all(promises).then(() => {
       setLoading(false);
     });
-  }, [inputText, abortController.signal]);
+  }, [inputText, abortController.signal, threshold]); // this makes sure that the function is re-created only when the inputText and threshold changes
 
   const handleCancel = useCallback(() => {
     console.log("Cancelled");
@@ -95,6 +107,36 @@ export default function Home() {
       className={`flex flex-col items-center justify-between p-4 lg:p-24 ${inter.className}`}
     >
       <div className="max-w-5xl w-full">
+        <div className="">
+          <Slider
+            label="Select a threshold"
+            color="foreground"
+            size="sm"
+            step={5}
+            marks={[
+              {
+                value: 20,
+                label: "20%",
+              },
+              {
+                value: 50,
+                label: "50%",
+              },
+              {
+                value: 80,
+                label: "80%",
+              },
+            ]}
+            defaultValue={90}
+            className="max-w-md mx-auto mr-4"
+            onChange={(e: number | number[]) => {
+              if (Array.isArray(e)) {
+                return;
+              }
+              setThreshold(e);
+            }}
+          />
+        </div>
         <p className="text-lg font-bold mb-2">BioInformatics</p>
         <div className="flex space-x-4 mb-4">
           {availableFormats.map((format) => (
