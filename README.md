@@ -109,7 +109,7 @@ export interface FormatParser {
 
 ### Format
 
-This is a type that can be either "Fasta", "FASTQ", or "Clustal".
+This is a type that can be either "Fasta", "FASTQ", or "Clustal" strings.
 
 ```ts
 export type Format = "Fasta" | "FASTQ" | "Clustal";
@@ -117,7 +117,7 @@ export type Format = "Fasta" | "FASTQ" | "Clustal";
 
 ### FormatInstanceList
 
-This is a type that can be an array of `Fasta`, `Fastq`, or `Clustal`.
+This is a type that can be an array of `Fasta`, `Fastq`, or `Clustal` classes.
 
 ```ts
 export type FormatInstanceList = Fasta[] | Fastq[] | Clustal[];
@@ -125,7 +125,7 @@ export type FormatInstanceList = Fasta[] | Fastq[] | Clustal[];
 
 ### FormatInstance
 
-This is a type that can be either `Fasta`, `Fastq`, or `Clustal`.
+This is a type that can be either `Fasta`, `Fastq`, or `Clustal` class.
 
 ```ts
 export type FormatInstance = Fasta | Fastq | Clustal;
@@ -135,8 +135,8 @@ export type FormatInstance = Fasta | Fastq | Clustal;
 
 This interface represents a response format with the following properties:
 
-- `sp`: A number representing the sp.
-- `no_sp`: A number representing the no_sp.
+- `sp`: A float number representing the probability signal peptide.
+- `no_sp`: A float number representing the probability of that the signal peptide is no on the protein sequence.
 
 ```ts
 export interface ResponseFormat {
@@ -150,11 +150,11 @@ export interface ResponseFormat {
 This interface represents a data point state with the following properties:
 
 - `id`: A string representing the id.
-- `prediction`: An optional boolean representing the prediction.
+- `prediction`: An optional boolean representing the prediction (signal peptide probability above threshold = true).
 - `completeResponseString`: A string representing the complete response string.
 - `requestFinished`: A boolean representing if the request has finished.
-- `data`: A `FormatInstance` representing the data.
-- `result`: A `ResponseFormat` representing the result.
+- `data`: A `FormatInstance` representing the data instance.
+- `result`: A `ResponseFormat` representing the result returned for the backend.
 
 ```ts
 export interface DataPointState {
@@ -166,3 +166,13 @@ export interface DataPointState {
   result: ResponseFormat;
 }
 ```
+
+## Structure of the Application
+
+The file `pages/index.tsx` is the access point for the application. The application uses components from the `components` folder. The types are placed in the `types` folder and styling is placed in the `styles`. Important files are the following:
+
+- `package.json` - the [dependencies and configurations](https://docs.npmjs.com/cli/v10/configuring-npm/package-json) of the project in a JSON format. The file is used when using the command `npm install` to install the project dependencies.
+- `.eslintrc.js` - the [linting configurations](https://eslint.org/docs/latest/use/configure/configuration-files) file. The configurations are used for the linting process ESLint and the linting in the GitHub pipeline.
+- `tailwind.config.ts` - [tailwind configuration](https://tailwindcss.com/docs/configuration) file. The styling configuration of the CSS framework.
+- `.env` - environment variables file. The file is loaded by Next on compiling.
+- `jest.config.js` - the configurations of the Jest automated testing library and are used when using command `npm run test` or command [`jest`](<(https://jestjs.io/docs/cli)>) (if you have [Jest CLI installed](https://www.npmjs.com/package/jest-cli))
