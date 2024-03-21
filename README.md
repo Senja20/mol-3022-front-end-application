@@ -1,6 +1,6 @@
 # MOL3022 - Front End - Signal Peptide
 
-This is a [Next.js](https://nextjs.org/) project. The project is the front the part of a signal peptide prediction project in the "MOL3022 - Bioinformatics - Method Oriented Project" course. The application is taking data (protein strings) and is sending those string to the backend where it uses those to make predictions, then the application displays the results to the user. This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+The project is the front the part of a signal peptide prediction project in the "MOL3022 - Bioinformatics - Method Oriented Project" course. The application is taking data (protein strings) and is sending those string to the backend where it uses those to make predictions, then the application displays the results to the user. This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
 
@@ -54,3 +54,13 @@ Launches the test runner in the interactive watch mode. See the section about [r
 The main page is comprised of an input filed (purple), the data formats that the user can choose, the buttons for interaction with the program (violet) and slider to choose the threshold (red). The threshold is the confidence tha the system need before claim that a passed in protein string has a signal peptide.
 
 ![](main-page-colors.png)
+
+## The Results
+
+The provided data is parsed, and for each data point a separate prediction is performed. The prediction can be above the threshold (green) or the below (red). Each data points gets an associated ID. Also each results can be expanded and see the more exact resulting values.
+
+![](results-demo.png)
+
+The expansion and closing is demonstrated by the following GIF:
+
+![](expand-and-close.gif)
