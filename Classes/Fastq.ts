@@ -2,6 +2,7 @@ class Fastq {
   private _header: string;
   private _sequence: string;
   private _quality: string;
+  private _format = "FASTQ";
 
   constructor(header: string, sequence: string, quality: string) {
     if (!header) {
@@ -31,6 +32,10 @@ class Fastq {
 
   get quality(): string {
     return this._quality;
+  }
+
+  get format(): string {
+    return this._format;
   }
 }
 

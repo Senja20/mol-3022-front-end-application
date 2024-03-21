@@ -16,8 +16,8 @@ const ButtonComponent = ({
       className={`px-6 py-3 text-black border border-black rounded-md mb-4 focus:outline-none hover:${displayColor}-600`}
       onClick={onClick}
       style={{
-        width: "100%", // Adjust width
-        maxWidth: "200px", // Set a maximum width
+        width: "100%",
+        maxWidth: "200px",
         height: "40pt",
         position: "relative",
       }}

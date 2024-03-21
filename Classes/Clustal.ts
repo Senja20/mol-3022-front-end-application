@@ -4,6 +4,7 @@ class Clustal implements FormatClass {
   private _header: string;
   private _sequence: string;
   private _length: string;
+  private _format = "Clustal";
 
   constructor(header: string, sequence: string, length = "") {
     if (!header) {
@@ -29,6 +30,10 @@ class Clustal implements FormatClass {
 
   get length(): string {
     return this._length;
+  }
+
+  get format(): string {
+    return this._format;
   }
 }
 

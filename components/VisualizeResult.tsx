@@ -62,6 +62,11 @@ function VisualizeResult({
                   <li>sp: {dataPointState.result.sp.toFixed(3)}</li>
                   <li>no sp: {dataPointState.result.no_sp.toFixed(3)}</li>
                 </p>
+
+                <strong>Format:</strong>
+                <p className="relative left-5">
+                  {(dataPointState.data.format as string).toUpperCase()}
+                </p>
               </div>
             )}
           </div>

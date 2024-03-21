@@ -1,6 +1,7 @@
 class Fasta {
   private _header: string;
   private _sequence: string;
+  private _format = "Fasta";
 
   /**
    * [constructor description] Creates a Fasta object.
@@ -31,6 +32,10 @@ class Fasta {
 
   get sequence(): string {
     return this._sequence;
+  }
+
+  get format(): string {
+    return this._format;
   }
 }
 
